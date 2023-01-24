@@ -1,11 +1,14 @@
 import "./App.css";
 import TextareaAutocomplete from "./TextareaAutocomplete";
 
-const suggestions = ["Column", "Column like", "Object", "And", "Or"];
+const suggestionsDummy = ["Addition", "Ball", "Test", "Height", "Condition"];
 function App(props) {
   return (
     <div>
-      <TextareaAutocomplete suggestions={suggestions} onInput={props.onInput} />
+      <TextareaAutocomplete
+        suggestions={props.suggestions || suggestionsDummy}
+        onInput={props.onInput}
+      />
     </div>
   );
 }

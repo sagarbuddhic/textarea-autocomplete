@@ -21,9 +21,7 @@ const TextareaAutocomplete = (props) => {
     return false;
   };
 
-  useEffect(() => {
-    console.log("text content", content);
-  });
+  useEffect(() => {});
 
   return (
     <div>
@@ -91,7 +89,6 @@ const TextareaAutocomplete = (props) => {
         }}
         contentEditable="true"
         onInput={(e) => {
-          console.log(`inner html`, e.currentTarget.innerHTML);
           let allSuggestions = [...suggestions];
 
           let inputContent = e.currentTarget.textContent
@@ -144,6 +141,7 @@ const TextareaAutocomplete = (props) => {
         {filteredSuggestions.map((item, index) => {
           return (
             <li
+              key={index}
               style={{
                 padding: "4px 16px",
                 backgroundColor: isSelected(
@@ -174,6 +172,11 @@ const TextareaAutocomplete = (props) => {
 TextareaAutocomplete.propTypes = {
   suggestions: PropTypes.array,
   onInput: PropTypes.func,
+};
+
+TextareaAutocomplete.defaultProps = {
+  suggestions: [],
+  onInput: () => {},
 };
 
 export default TextareaAutocomplete;
