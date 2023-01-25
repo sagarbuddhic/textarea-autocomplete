@@ -1,5 +1,6 @@
 {
   "name": "textarea-autocomplete",
+  "main": "src/TextareaAutocomplete.js",
   "version": "0.1.2",
   "private": false,
   "dependencies": {

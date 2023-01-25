@@ -175,7 +175,7 @@ TextareaAutocomplete.propTypes = {
 };
 
 TextareaAutocomplete.defaultProps = {
-  suggestions: [],
+  suggestions: ["Addition", "Ball", "Test", "Height", "Condition"],
   onInput: () => {},
 };
 
