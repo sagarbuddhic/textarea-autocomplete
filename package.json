@@ -1,7 +1,7 @@
 {
   "name": "textarea-autocomplete",
   "main": "src/TextareaAutocomplete.js",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
