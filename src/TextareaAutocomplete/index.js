@@ -58,13 +58,33 @@ const TextareaAutocomplete = (props) => {
             }
 
             if (e.key === "Enter") {
-              let splitContent = content?.split(" ");
-              if (splitContent.length > 0) {
-                splitContent.pop();
+              // let splitContent = content?.split(" ");
+              // if (splitContent.length > 0) {
+              //   splitContent.pop();
+              // }
+              // editDiv.current.textContent = `${splitContent.join(" ")} ${
+              //   filteredSuggestions[highlightedOption]
+              // } `;
+
+              let inner = editDiv.current.innerHTML;
+              let splitInner = inner
+                .replace("<div><br></div>", "")
+                .split("<div>");
+
+              if (splitInner.length > 0) {
+                let last;
+                last = splitInner[splitInner.length - 1];
+                let lastSplit = last?.split(" ");
+                lastSplit.pop();
+                // lastSplit.pop();
+                lastSplit.push(
+                  `${filteredSuggestions[highlightedOption]} </div>`
+                );
+                let updatedLast = lastSplit.join(" ");
+                splitInner.pop();
+                splitInner.push(updatedLast);
+                editDiv.current.innerHTML = splitInner.join("<div>");
               }
-              editDiv.current.textContent = `${splitContent.join(" ")} ${
-                filteredSuggestions[highlightedOption]
-              } `;
 
               const inputRange = document.createRange();
               inputRange.selectNodeContents(editDiv.current);
