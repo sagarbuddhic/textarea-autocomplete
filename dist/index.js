@@ -25,6 +25,8 @@ const TextareaAutocomplete = props => {
   return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
     ref: editDiv,
     onKeyUp: e => {
+      // let editDivRect = editDiv.current.getBoundingClientRect();
+
       let selection = window.getSelection();
       let rangeAt = selection.getRangeAt(0);
       let range = rangeAt.cloneRange();
@@ -32,7 +34,7 @@ const TextareaAutocomplete = props => {
       if (clientRects && clientRects.length > 0) {
         let rect = clientRects[0];
         if (rect) {
-          setListTop(rect.top + window.scrollY);
+          setListTop(rect.top);
           setListLeft(rect.left);
         }
       }
@@ -112,7 +114,7 @@ const TextareaAutocomplete = props => {
     }
   }), /*#__PURE__*/React.createElement("ul", {
     style: {
-      position: "absolute",
+      position: "fixed",
       top: `${listTop + 15}px`,
       left: `${listLeft}px`,
       listStyle: "none",
