@@ -59,7 +59,7 @@ const TextareaAutocomplete = props => {
           //   filteredSuggestions[highlightedOption]
           // } `;
 
-          let inner = editDiv.current.innerHTML;
+          let inner = editDiv?.current?.innerHTML;
           let splitInner = inner.replace("<div><br></div>", "").split("<div>");
           if (splitInner.length > 0) {
             let last;
