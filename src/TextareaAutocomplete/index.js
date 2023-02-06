@@ -60,31 +60,24 @@ const TextareaAutocomplete = (props) => {
             }
 
             if (e.key === "Enter") {
-              // let splitContent = content?.split(" ");
-              // if (splitContent.length > 0) {
-              //   splitContent.pop();
-              // }
-              // editDiv.current.textContent = `${splitContent.join(" ")} ${
-              //   filteredSuggestions[highlightedOption]
-              // } `;
-
               let inner = editDiv?.current?.innerHTML;
+              //split multiline content
               let splitInner = inner
                 .replace("<div><br></div>", "")
                 .split("<div>");
 
               if (splitInner.length > 0) {
-                let last;
-                last = splitInner[splitInner.length - 1];
-                let lastSplit = last?.split(" ");
-                lastSplit.pop();
-                // lastSplit.pop();
-                lastSplit.push(
+                // fetch last value
+                let lastLine;
+                lastLine = splitInner[splitInner.length - 1];
+                let lastLineSplit = lastLine?.split(" ");
+                lastLineSplit.pop();
+                lastLineSplit.push(
                   `${filteredSuggestions[highlightedOption]} </div>`
                 );
-                let updatedLast = lastSplit.join(" ");
+                let updatedLastLine = lastLineSplit.join(" ");
                 splitInner.pop();
-                splitInner.push(updatedLast);
+                splitInner.push(updatedLastLine);
                 editDiv.current.innerHTML = splitInner.join("<div>");
               }
 
@@ -112,7 +105,6 @@ const TextareaAutocomplete = (props) => {
         contentEditable="true"
         onInput={(e) => {
           let allSuggestions = [...suggestions];
-
           let inputContent = e.currentTarget.textContent
             .toString()
             .toLowerCase();
