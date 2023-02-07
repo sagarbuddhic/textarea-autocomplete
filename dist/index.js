@@ -6,12 +6,14 @@ const TextareaAutocomplete = props => {
   const {
     suggestions,
     handleInput,
-    editableStyle
+    editableStyle,
+    showSuggestionWithNoInput
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [highlightedOption, setHighlightedOption] = useState(0);
+  const [content, setContent] = useState("");
   const editDiv = useRef(null);
   const isSelected = (highlighted, item, index) => {
     if (highlighted) {
@@ -37,6 +39,14 @@ const TextareaAutocomplete = props => {
           setListTop(rect.top);
           setListLeft(rect.left);
         }
+      }
+      if (e.key === "Escape") {
+        setFilteredSuggestions([]);
+        setHighlightedOption(0);
+      }
+      if ((e.code === "Space" || !content) && showSuggestionWithNoInput) {
+        setFilteredSuggestions(suggestions);
+        setHighlightedOption(0);
       }
       if (filteredSuggestions.length > 0) {
         if (!["Enter", "ArrowUp", "ArrowDown"].includes(e.key)) {
@@ -65,7 +75,7 @@ const TextareaAutocomplete = props => {
             lastLine = splitInner[splitInner.length - 1];
             let lastLineSplit = lastLine?.split(" ");
             lastLineSplit.pop();
-            lastLineSplit.push(`${filteredSuggestions[highlightedOption]} </div>`);
+            lastLineSplit.push(`${filteredSuggestions[highlightedOption]}</div>`);
             let updatedLastLine = lastLineSplit.join(" ");
             splitInner.pop();
             splitInner.push(updatedLastLine);
@@ -79,6 +89,7 @@ const TextareaAutocomplete = props => {
           setFilteredSuggestions([]);
         }
       }
+      setContent(editDiv.current.textContent);
       handleInput(editDiv.current.textContent);
     },
     style: {
@@ -88,6 +99,12 @@ const TextareaAutocomplete = props => {
       ...editableStyle
     },
     contentEditable: "true",
+    onFocus: () => {
+      if (showSuggestionWithNoInput && !content) {
+        setFilteredSuggestions(suggestions);
+        setHighlightedOption(0);
+      }
+    },
     onInput: e => {
       if (!(e.currentTarget.innerText.endsWith("\n") && filteredSuggestions.length > 0)) {
         let allSuggestions = [...suggestions];
@@ -139,7 +156,8 @@ const TextareaAutocomplete = props => {
 TextareaAutocomplete.propTypes = {
   editableStyle: PropTypes.object,
   suggestions: PropTypes.array,
-  handleInput: PropTypes.func
+  handleInput: PropTypes.func,
+  showSuggestionWithNoInput: PropTypes.bool
 };
 TextareaAutocomplete.defaultProps = {
   suggestions: ["Addition", "Ball", "Call", "Date", "Test", "Height", "Condition"],
@@ -148,6 +166,7 @@ TextareaAutocomplete.defaultProps = {
     minHeight: "80px",
     width: "500px",
     border: "1px solid darkgray"
-  }
+  },
+  showSuggestionWithNoInput: false
 };
 export default TextareaAutocomplete;
