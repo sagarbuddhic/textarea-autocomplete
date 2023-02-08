@@ -7,7 +7,8 @@ const TextareaAutocomplete = props => {
     suggestions,
     handleInput,
     editableStyle,
-    showSuggestionWithNoInput
+    showSuggestionWithNoInput,
+    showSuggestionStartsWith
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -132,8 +133,13 @@ const TextareaAutocomplete = props => {
         let filtered = allSuggestions.filter(suggestion => {
           let listItem = suggestion?.toString().toLowerCase();
           let listItemArray = listItem?.split(" ");
+          let lastWordLower = lastWord.toString().toLowerCase();
           let satisfiesCondition = listItemArray.some(item => {
-            return lastWord !== "" && item.startsWith(lastWord.toString().toLowerCase());
+            if (showSuggestionStartsWith) {
+              return lastWord !== "" && item.startsWith(lastWordLower);
+            } else {
+              return lastWord !== "" && item.includes(lastWordLower);
+            }
           });
           return satisfiesCondition;
         });
@@ -178,7 +184,8 @@ TextareaAutocomplete.propTypes = {
   editableStyle: PropTypes.object,
   suggestions: PropTypes.array,
   handleInput: PropTypes.func,
-  showSuggestionWithNoInput: PropTypes.bool
+  showSuggestionWithNoInput: PropTypes.bool,
+  showSuggestionStartsWith: PropTypes.bool
 };
 TextareaAutocomplete.defaultProps = {
   suggestions: ["Addition", "Ball", "Call", "Date", "Test", "Height", "Condition"],
@@ -188,6 +195,7 @@ TextareaAutocomplete.defaultProps = {
     width: "500px",
     border: "1px solid darkgray"
   },
-  showSuggestionWithNoInput: false
+  showSuggestionWithNoInput: false,
+  showSuggestionStartsWith: false
 };
 export default TextareaAutocomplete;
