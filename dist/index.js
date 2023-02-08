@@ -40,14 +40,6 @@ const TextareaAutocomplete = props => {
           setListLeft(rect.left);
         }
       }
-      if (e.key === "Escape") {
-        setFilteredSuggestions([]);
-        setHighlightedOption(0);
-      }
-      if ((e.code === "Space" || !content) && showSuggestionWithNoInput) {
-        setFilteredSuggestions(suggestions);
-        setHighlightedOption(0);
-      }
       if (filteredSuggestions.length > 0) {
         if (!["Enter", "ArrowUp", "ArrowDown"].includes(e.key)) {
           setHighlightedOption(0);
@@ -59,11 +51,25 @@ const TextareaAutocomplete = props => {
             let highlightedOption1 = highlightedOption + 1;
             setHighlightedOption(highlightedOption1);
           }
+          let className = `list${highlightedOption + 1 < filteredSuggestions.length ? highlightedOption + 1 : 0}`;
+          let element = document.getElementsByClassName(className);
+          element && element[0]?.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+            inline: "nearest"
+          });
         }
         if (e.key === "ArrowUp") {
           if (highlightedOption !== 0) {
             setHighlightedOption(highlightedOption - 1);
           }
+          let className = `list${highlightedOption - 1 > 0 ? highlightedOption - 1 : 0}`;
+          let element = document.getElementsByClassName(className);
+          element && element[0]?.scrollIntoView({
+            behavior: "smooth",
+            block: "end",
+            inline: "nearest"
+          });
         }
         if (e.key === "Enter") {
           let inner = editDiv?.current?.innerHTML;
@@ -89,6 +95,17 @@ const TextareaAutocomplete = props => {
           setFilteredSuggestions([]);
         }
       }
+      if (e.key === "Escape") {
+        setFilteredSuggestions([]);
+        setHighlightedOption(0);
+      } else if (showSuggestionWithNoInput) {
+        if (e.code === "Space") {
+          setFilteredSuggestions(suggestions);
+          setHighlightedOption(0);
+        } else if (!editDiv.current.textContent) {
+          setFilteredSuggestions(suggestions);
+        }
+      }
       setContent(editDiv.current.textContent);
       handleInput(editDiv.current.textContent);
     },
@@ -96,6 +113,7 @@ const TextareaAutocomplete = props => {
       border: "1px solid lightgrey",
       padding: "5px 7px",
       whiteSpace: "pre-wrap",
+      fontSize: "12px",
       ...editableStyle
     },
     contentEditable: "true",
@@ -124,26 +142,29 @@ const TextareaAutocomplete = props => {
     }
   }), /*#__PURE__*/React.createElement("ul", {
     style: {
-      position: "fixed",
-      top: `${listTop + 15}px`,
-      left: `${listLeft}px`,
       listStyle: "none",
-      fontSize: "13px",
-      letterSpacing: "var(--letter-spacing-14)",
-      zIndex: "9999",
       display: "flex",
-      visibility: filteredSuggestions.length > 0 ? "visible" : "hidden",
       flexDirection: "column",
+      fontSize: "11px",
+      letterSpacing: "var(--letter-spacing-12)",
+      padding: "8px 0",
+      margin: 0,
+      maxHeight: "200px",
+      overflowY: "auto",
+      position: "fixed",
+      top: `${listTop + 13}px`,
+      left: `${listLeft + 2}px`,
+      zIndex: "9999",
+      visibility: filteredSuggestions.length > 0 ? "visible" : "hidden",
       border: "1px solid hsla(216, 41%, 87%, 0.8)",
       borderRadius: "6px",
-      boxShadow: "0 8px 24px rgb(149 157 165 / 20%)",
+      boxShadow: "0 4px 16px rgb(149 157 165 / 10%)",
       background: "white",
-      color: "black",
-      padding: "8px 0",
-      margin: 0
+      color: "black"
     }
   }, filteredSuggestions.map((item, index) => {
     return /*#__PURE__*/React.createElement("li", {
+      className: `list${index}`,
       key: index,
       style: {
         padding: "4px 16px",
