@@ -13,6 +13,13 @@ This Component provides a text area where we can pass an array of options which 
 | handleInput              | Callback    | called when input is changed with input text as argument                |
 | editableStyle            | object      |  style object for div edit                                              |
 |showSuggestionWithNoInput | bool        |  show suggestion without entering any input, ex on space                |
+|showSuggestionStartsWith  | bool        |  show suggestion which starts with input entered                        |
+
+## Usage
+
+```
+import TextareaAutocomplete from "textarea-autocomplete";
+```
 
 ## Example Props
 
@@ -35,4 +42,5 @@ This Component provides a text area where we can pass an array of options which 
     border: "1px solid darkgray",
   },
   showSuggestionWithNoInput: false,
+  showSuggestionStartsWith: false,
 }; ```
