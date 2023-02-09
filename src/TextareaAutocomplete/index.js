@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useEffect } from "react";
 import { useRef } from "react";
+import "./index.css";
 
 const TextareaAutocomplete = (props) => {
   const {
@@ -10,6 +11,7 @@ const TextareaAutocomplete = (props) => {
     editableStyle,
     showSuggestionWithNoInput,
     showSuggestionStartsWith,
+    placeholder,
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -17,6 +19,7 @@ const TextareaAutocomplete = (props) => {
   const [highlightedOption, setHighlightedOption] = useState(0);
   const [content, setContent] = useState("");
   const editDiv = useRef(null);
+  const [editableFocus, setEditableFocus] = useState(false);
 
   const isSelected = (highlighted, item, index) => {
     if (highlighted) {
@@ -28,10 +31,11 @@ const TextareaAutocomplete = (props) => {
   };
 
   useEffect(() => {});
-
   return (
-    <div>
+    <div className="editableWrapper">
       <div
+        className="editableAutocomplete"
+        data-content={placeholder}
         ref={editDiv}
         onKeyUp={(e) => {
           // let editDivRect = editDiv.current.getBoundingClientRect();
@@ -142,11 +146,13 @@ const TextareaAutocomplete = (props) => {
           handleInput(editDiv.current.innerText);
         }}
         style={{
-          border: "1px solid lightgrey",
+          border: editableFocus ? "1px solid black" : "1px solid lightgrey",
           padding: "5px 7px",
           whiteSpace: "pre-wrap",
           fontSize: "12px",
           borderRadius: "3px",
+          minHeight: "80px",
+          width: "auto",
           ...editableStyle,
         }}
         contentEditable="true"
@@ -155,6 +161,16 @@ const TextareaAutocomplete = (props) => {
             setFilteredSuggestions(suggestions);
             setHighlightedOption(0);
           }
+          setEditableFocus(true);
+        }}
+        onBlur={() => {
+          setEditableFocus(false);
+        }}
+        onMouseEnter={() => {
+          setEditableFocus(true);
+        }}
+        onMouseLeave={() => {
+          setEditableFocus(false);
         }}
         onInput={(e) => {
           if (
@@ -221,7 +237,7 @@ const TextareaAutocomplete = (props) => {
                   item,
                   index
                 )
-                  ? "hsl(205, 75%, 76%)"
+                  ? "hsl(213, 71%, 90%)"
                   : "white",
                 color: isSelected(
                   filteredSuggestions[highlightedOption],
@@ -247,6 +263,7 @@ TextareaAutocomplete.propTypes = {
   handleInput: PropTypes.func,
   showSuggestionWithNoInput: PropTypes.bool,
   showSuggestionStartsWith: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 TextareaAutocomplete.defaultProps = {
@@ -263,10 +280,9 @@ TextareaAutocomplete.defaultProps = {
     "DATETIME",
     "STRING",
   ],
+  placeholder: "",
   handleInput: (input) => {},
   editableStyle: {
-    minHeight: "80px",
-    width: "500px",
     border: "1px solid darkgray",
   },
   showSuggestionWithNoInput: false,

@@ -23,6 +23,12 @@ function App(props) {
       <TextareaAutocomplete
         suggestions={props.suggestions || suggestionsDummy}
         handleInput={handleInput}
+        placeholder="test"
+        editableStyle={
+          {
+            // border: "1px solid red",
+          }
+        }
       />
     </div>
   );

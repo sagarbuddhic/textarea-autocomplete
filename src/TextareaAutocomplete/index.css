@@ -1,0 +1,5 @@
+
+  .editableAutocomplete:empty:not(:focus):before {
+    content: attr(data-content);
+    color: darkgray;
+  }

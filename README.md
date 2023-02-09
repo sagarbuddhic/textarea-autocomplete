@@ -12,6 +12,7 @@ This Component provides a text area where we can pass an array of options which 
 | suggestions              | Array       | list of values for autocomplete                                         |
 | handleInput              | Callback    | called when input is changed with input text as argument                |
 | editableStyle            | object      |  style object for div edit                                              |
+| placeholder              | string      |  placeholder                                                            |
 |showSuggestionWithNoInput | bool        |  show suggestion without entering any input, ex on space                |
 |showSuggestionStartsWith  | bool        |  show suggestion which starts with input entered                        |
 
