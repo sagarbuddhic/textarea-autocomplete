@@ -133,13 +133,13 @@ const TextareaAutocomplete = (props) => {
             if (e.code === "Space") {
               setFilteredSuggestions(suggestions);
               setHighlightedOption(0);
-            } else if (!editDiv.current.textContent) {
+            } else if (!editDiv.current.innerText) {
               setFilteredSuggestions(suggestions);
             }
           }
 
-          setContent(editDiv.current.textContent);
-          handleInput(editDiv.current.textContent);
+          setContent(editDiv.current.innerText);
+          handleInput(editDiv.current.innerText);
         }}
         style={{
           border: "1px solid lightgrey",
@@ -250,13 +250,17 @@ TextareaAutocomplete.propTypes = {
 
 TextareaAutocomplete.defaultProps = {
   suggestions: [
-    "Addition",
-    "Ball",
-    "Call",
-    "Date",
-    "Test",
-    "Height",
-    "Condition",
+    "IGNORE_DIFF",
+    "FILTER_DIFF",
+    "WHERE",
+    "COLUMN_TYPE",
+    "COLUMN_NAME",
+    "TABLE_NAME",
+    "LIKE",
+    "=",
+    "INTEGER",
+    "DATETIME",
+    "STRING",
   ],
   handleInput: (input) => {},
   editableStyle: {

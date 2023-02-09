@@ -1,13 +1,28 @@
 import "./App.css";
 import TextareaAutocomplete from "./TextareaAutocomplete";
 
-const suggestionsDummy = ["Addition", "Ball", "Test", "Height", "Condition"];
+const suggestionsDummy = [
+  "IGNORE_DIFF",
+  "FILTER_DIFF",
+  "WHERE",
+  "COLUMN_TYPE",
+  "COLUMN_NAME",
+  "TABLE_NAME",
+  "LIKE",
+  "=",
+  "INTEGER",
+  "DATETIME",
+  "STRING",
+];
 function App(props) {
+  const handleInput = (input) => {
+    console.log(JSON.stringify(input.replaceAll("\n", " ")));
+  };
   return (
     <div>
       <TextareaAutocomplete
         suggestions={props.suggestions || suggestionsDummy}
-        onInput={props.onInput}
+        handleInput={handleInput}
       />
     </div>
   );
