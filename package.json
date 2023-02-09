@@ -7,7 +7,7 @@
       "@babel/preset-react"
     ]
   },
-  "version": "0.1.12",
+  "version": "0.1.13",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",

@@ -115,6 +115,7 @@ const TextareaAutocomplete = props => {
       padding: "5px 7px",
       whiteSpace: "pre-wrap",
       fontSize: "12px",
+      borderRadius: "3px",
       ...editableStyle
     },
     contentEditable: "true",
@@ -174,8 +175,8 @@ const TextareaAutocomplete = props => {
       key: index,
       style: {
         padding: "4px 16px",
-        backgroundColor: isSelected(filteredSuggestions[highlightedOption], item, index) ? "hsl(243, 93%, 67%)" : "white",
-        color: isSelected(filteredSuggestions[highlightedOption], item, index) ? "white" : "black"
+        backgroundColor: isSelected(filteredSuggestions[highlightedOption], item, index) ? "hsl(205, 75%, 76%)" : "white",
+        color: isSelected(filteredSuggestions[highlightedOption], item, index) ? "black" : "black"
       }
     }, item);
   })));
@@ -188,7 +189,7 @@ TextareaAutocomplete.propTypes = {
   showSuggestionStartsWith: PropTypes.bool
 };
 TextareaAutocomplete.defaultProps = {
-  suggestions: ["IGNORE_DIFF", "FILTER_DIFF", "WHERE", "COLUMN_TYPE", "COLUMN_NAME", "TABLE_NAME", "LIKE", "="],
+  suggestions: ["IGNORE_DIFF", "FILTER_DIFF", "WHERE", "COLUMN_TYPE", "COLUMN_NAME", "TABLE_NAME", "LIKE", "=", "INTEGER", "DATETIME", "STRING"],
   handleInput: input => {},
   editableStyle: {
     minHeight: "80px",

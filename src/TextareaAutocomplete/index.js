@@ -146,6 +146,7 @@ const TextareaAutocomplete = (props) => {
           padding: "5px 7px",
           whiteSpace: "pre-wrap",
           fontSize: "12px",
+          borderRadius: "3px",
           ...editableStyle,
         }}
         contentEditable="true"
@@ -220,14 +221,14 @@ const TextareaAutocomplete = (props) => {
                   item,
                   index
                 )
-                  ? "hsl(243, 93%, 67%)"
+                  ? "hsl(205, 75%, 76%)"
                   : "white",
                 color: isSelected(
                   filteredSuggestions[highlightedOption],
                   item,
                   index
                 )
-                  ? "white"
+                  ? "black"
                   : "black",
               }}
             >
