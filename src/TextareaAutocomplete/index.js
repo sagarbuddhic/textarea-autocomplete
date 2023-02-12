@@ -18,6 +18,7 @@ const TextareaAutocomplete = (props) => {
   const [filteredSuggestions, setFilteredSuggestions] = useState([]);
   const [highlightedOption, setHighlightedOption] = useState(0);
   const [content, setContent] = useState("");
+  const [prevContent, setPrevContent] = useState("");
   const editDiv = useRef(null);
   const [editableFocus, setEditableFocus] = useState(false);
 
@@ -38,58 +39,104 @@ const TextareaAutocomplete = (props) => {
         data-content={placeholder}
         ref={editDiv}
         onKeyUp={(e) => {
-          // let editDivRect = editDiv.current.getBoundingClientRect();
+          if (
+            !editDiv ||
+            !editDiv.current ||
+            e.key === "ArrowLeft" ||
+            e.key === "ArrowRight"
+          ) {
+            return;
+          }
 
-          let selection = window.getSelection();
-          let rangeAt = selection.getRangeAt(0);
-          let range = rangeAt.cloneRange();
-          let clientRects = range.getClientRects();
+          if (e.key === "Escape") {
+            setFilteredSuggestions([]);
+            setHighlightedOption(0);
+            return;
+          }
 
-          if (clientRects && clientRects.length > 0) {
-            let rect = clientRects[0];
-            if (rect) {
-              setListTop(rect.top);
-              setListLeft(rect.left);
+          if (e.code === "Space") {
+            setHighlightedOption(0);
+            if (showSuggestionWithNoInput) {
+              setFilteredSuggestions(suggestions);
             }
           }
 
+          if (!editDiv.current.innerText && showSuggestionWithNoInput) {
+            setFilteredSuggestions(suggestions);
+            setHighlightedOption(0);
+          }
+
+          let innerText = editDiv.current.innerText;
+          let ignoreFilter =
+            filteredSuggestions.length > 0 &&
+            (innerText.endsWith("\n") ||
+              ["Enter", "ArrowUp", "ArrowDown"].includes(e.key));
+
+          if (!ignoreFilter) {
+            let contentArr = [...content];
+            let diffIndex = 0;
+            [...innerText].every((val, index) => {
+              diffIndex = index;
+              return val === contentArr[index];
+            });
+
+            let contentLeft = innerText.substring(0, diffIndex + 1);
+            if (
+              e.key === "Backspace" &&
+              contentLeft.length !== innerText.length
+            ) {
+              contentLeft = innerText.substring(0, diffIndex);
+            }
+            let AllWords = contentLeft.split(/[\s]+/);
+
+            let lastWord =
+              AllWords.length > 0 ? AllWords[AllWords.length - 1] : "";
+            let lastWordLower = lastWord.toString().toLowerCase();
+
+            let allSuggestions = [...suggestions];
+
+            let filtered = allSuggestions.filter((suggestion) => {
+              let listItem = suggestion?.toString().toLowerCase();
+              let listItemArray = listItem?.split(" ");
+
+              let satisfiesCondition = listItemArray.some((item) => {
+                if (showSuggestionStartsWith) {
+                  return lastWordLower !== "" && item.startsWith(lastWordLower);
+                } else {
+                  return lastWordLower !== "" && item.includes(lastWordLower);
+                }
+              });
+              return satisfiesCondition;
+            });
+
+            setFilteredSuggestions(filtered);
+          }
+
           if (filteredSuggestions.length > 0) {
+            e.preventDefault();
             if (!["Enter", "ArrowUp", "ArrowDown"].includes(e.key)) {
               setHighlightedOption(0);
             }
+            let updatedHighlightedOption = highlightedOption;
 
             if (e.key === "ArrowDown") {
-              if (highlightedOption >= filteredSuggestions.length - 1) {
-                setHighlightedOption(0);
-              } else {
-                let highlightedOption1 = highlightedOption + 1;
-                setHighlightedOption(highlightedOption1);
-              }
-
-              let className = `list${
-                highlightedOption + 1 < filteredSuggestions.length
-                  ? highlightedOption + 1
-                  : 0
-              }`;
-
-              let element = document.getElementsByClassName(className);
-              element &&
-                element[0]?.scrollIntoView({
-                  behavior: "smooth",
-                  block: "end",
-                  inline: "nearest",
-                });
+              updatedHighlightedOption =
+                highlightedOption >= filteredSuggestions.length - 1
+                  ? 0
+                  : highlightedOption + 1;
             }
 
             if (e.key === "ArrowUp") {
               if (highlightedOption !== 0) {
-                setHighlightedOption(highlightedOption - 1);
+                updatedHighlightedOption = highlightedOption - 1;
               }
+            }
 
-              let className = `list${
-                highlightedOption - 1 > 0 ? highlightedOption - 1 : 0
-              }`;
-              let element = document.getElementsByClassName(className);
+            if (["ArrowDown", "ArrowUp"].includes(e.key)) {
+              setHighlightedOption(updatedHighlightedOption);
+              let element = document.getElementsByClassName(
+                `list${updatedHighlightedOption}`
+              );
               element &&
                 element[0]?.scrollIntoView({
                   behavior: "smooth",
@@ -99,51 +146,95 @@ const TextareaAutocomplete = (props) => {
             }
 
             if (e.key === "Enter") {
-              let inner = editDiv?.current?.innerHTML;
-              //split multiline content
-              let splitInner = inner
-                .replace("<div><br></div>", "")
-                .split("<div>");
+              let prevArr = [...prevContent];
+              let enterIndex = 0;
+              [...content].every((val, index) => {
+                enterIndex = index;
+                return val === prevArr[index];
+              });
 
-              if (splitInner.length > 0) {
-                // fetch last value
-                let lastLine;
-                lastLine = splitInner[splitInner.length - 1];
-                let lastLineSplit = lastLine?.split(" ");
-                lastLineSplit.pop();
-                lastLineSplit.push(
-                  `${filteredSuggestions[highlightedOption]}</div>`
-                );
-                let updatedLastLine = lastLineSplit.join(" ");
-                splitInner.pop();
-                splitInner.push(updatedLastLine);
-                editDiv.current.innerHTML = splitInner.join("<div>");
+              let contentLeft = content.substring(0, enterIndex + 1);
+              let contentRight = content.substring(enterIndex + 1);
+              if (prevContent.length > content.length) {
+                contentLeft = content.substring(0, enterIndex);
+                contentRight = content.substring(enterIndex);
               }
 
+              let endIndexOfLeft = Math.max(
+                contentLeft.lastIndexOf(" "),
+                contentLeft.lastIndexOf("\n")
+              );
+              contentLeft = `${contentLeft.substring(0, endIndexOfLeft + 1)}${
+                filteredSuggestions[highlightedOption]
+              }`;
+              editDiv.current.innerText = contentLeft + contentRight;
+
+              let cursorMoveWords = contentLeft
+                .split(/[\s]+/)
+                .filter((val) => val !== "");
+              let sel = window.getSelection();
+
+              // cursorMoveWords.forEach(() => {
+              //   sel.modify("move", "forward", "word");
+              // });
+              // sel.modify("move", "forward", "word");
+
+              // editDiv.current.focus();
+              let sentences = editDiv.current.innerText.split("\n");
+              let contentLeftLength = contentLeft.replaceAll("\n", "").length;
+              let childIndex = 0;
+              sentences.every((sentence) => {
+                if (contentLeftLength > sentence.length) {
+                  contentLeftLength = contentLeftLength - sentence.length;
+                  childIndex = childIndex + 2;
+                  return true;
+                }
+                return false;
+              });
+              childIndex =
+                childIndex > editDiv.current.childNodes.length
+                  ? childIndex - 1
+                  : childIndex;
+
               const inputRange = document.createRange();
-              inputRange.selectNodeContents(editDiv.current);
-              inputRange.collapse(false);
-              selection.removeAllRanges();
-              selection.addRange(inputRange);
+              inputRange.setStart(
+                editDiv.current.childNodes[childIndex],
+                contentLeftLength
+              );
+              inputRange.collapse(true);
+              sel.removeAllRanges();
+              sel.addRange(inputRange);
 
               setFilteredSuggestions([]);
             }
           }
 
-          if (e.key === "Escape") {
-            setFilteredSuggestions([]);
-            setHighlightedOption(0);
-          } else if (showSuggestionWithNoInput) {
-            if (e.code === "Space") {
-              setFilteredSuggestions(suggestions);
-              setHighlightedOption(0);
-            } else if (!editDiv.current.innerText) {
-              setFilteredSuggestions(suggestions);
+          if (window) {
+            let selection = window.getSelection();
+            let rangeAt = selection.getRangeAt(0);
+            let range = rangeAt.cloneRange();
+            let clientRects = range.getClientRects();
+
+            if (clientRects && clientRects.length > 0) {
+              let rect = clientRects[0];
+              if (rect) {
+                setListTop(rect.top);
+                setListLeft(rect.left);
+              }
             }
           }
 
+          setPrevContent(content);
           setContent(editDiv.current.innerText);
           handleInput(editDiv.current.innerText);
+        }}
+        onKeyDown={(e) => {
+          if (
+            ["ArrowDown", "ArrowUp", "Enter"].includes(e.key) &&
+            filteredSuggestions.length > 0
+          ) {
+            e.preventDefault();
+          }
         }}
         style={{
           border: editableFocus ? "1px solid black" : "1px solid lightgrey",
@@ -165,6 +256,8 @@ const TextareaAutocomplete = (props) => {
         }}
         onBlur={() => {
           setEditableFocus(false);
+          setFilteredSuggestions([]);
+          setHighlightedOption(0);
         }}
         onMouseEnter={() => {
           setEditableFocus(true);
@@ -173,37 +266,58 @@ const TextareaAutocomplete = (props) => {
           setEditableFocus(false);
         }}
         onInput={(e) => {
-          if (
-            !(
-              e.currentTarget.innerText.endsWith("\n") &&
-              filteredSuggestions.length > 0
-            )
-          ) {
-            let allSuggestions = [...suggestions];
-            let innerTextWords = e.currentTarget.innerText;
-            let AllWords = innerTextWords.split(/[\s]+/);
-            let lastWord =
-              AllWords.length > 0 ? AllWords[AllWords.length - 1] : "";
-
-            let filtered = allSuggestions.filter((suggestion) => {
-              let listItem = suggestion?.toString().toLowerCase();
-              let listItemArray = listItem?.split(" ");
-              let lastWordLower = lastWord.toString().toLowerCase();
-              let satisfiesCondition = listItemArray.some((item) => {
-                if (showSuggestionStartsWith) {
-                  return lastWord !== "" && item.startsWith(lastWordLower);
-                } else {
-                  return lastWord !== "" && item.includes(lastWordLower);
-                }
-              });
-              return satisfiesCondition;
-            });
-            setFilteredSuggestions(filtered);
-          }
+          // if (
+          //   !(
+          //     e.currentTarget.innerText.endsWith("\n") &&
+          //     filteredSuggestions.length > 0
+          //   )
+          // ) {
+          //   let contentArr = [...content];
+          //   let diffIndex = 0;
+          //   [...e.currentTarget.innerText].every((val, index) => {
+          //     diffIndex = index;
+          //     return val === contentArr[index];
+          //   });
+          //   let contentLeft = e.currentTarget.innerText.substring(
+          //     0,
+          //     diffIndex + 1
+          //   );
+          //   console.log(`left`, contentLeft);
+          //   // let endIndexOfLeft = Math.max(
+          //   //   contentLeft.lastIndexOf(" "),
+          //   //   contentLeft.lastIndexOf("\n"),
+          //   //   diffIndex
+          //   // );
+          //   // let innerTextWords = e.currentTarget.innerText;
+          //   let AllWords = contentLeft.split(/[\s]+/);
+          //   console.log(AllWords);
+          //   let lastWord =
+          //     AllWords.length > 0 ? AllWords[AllWords.length - 1] : "";
+          //   let lastWordLower = lastWord.toString().toLowerCase();
+          //   let allSuggestions = [...suggestions];
+          //   let filtered = allSuggestions.filter((suggestion) => {
+          //     let listItem = suggestion?.toString().toLowerCase();
+          //     let listItemArray = listItem?.split(" ");
+          //     let satisfiesCondition = listItemArray.some((item) => {
+          //       if (showSuggestionStartsWith) {
+          //         return lastWordLower !== "" && item.startsWith(lastWordLower);
+          //       } else {
+          //         return lastWordLower !== "" && item.includes(lastWordLower);
+          //       }
+          //     });
+          //     return satisfiesCondition;
+          //   });
+          //   setFilteredSuggestions(filtered);
+          // }
         }}
       ></div>
       <ul
+        // onMouseLeave={(e) => {
+        //   setHighlightedOption(0);
+        // }}
         style={{
+          pointerEvents: "fill",
+          cursor: "pointer",
           listStyle: "none",
           display: "flex",
           flexDirection: "column",
@@ -217,7 +331,10 @@ const TextareaAutocomplete = (props) => {
           top: `${listTop + 13}px`,
           left: `${listLeft + 2}px`,
           zIndex: "9999",
-          visibility: filteredSuggestions.length > 0 ? "visible" : "hidden",
+          visibility:
+            filteredSuggestions.length > 0 && listLeft > 0 && listTop > 0
+              ? "visible"
+              : "hidden",
           border: "1px solid hsla(216, 41%, 87%, 0.8)",
           borderRadius: "6px",
           boxShadow: "0 4px 16px rgb(149 157 165 / 10%)",
@@ -228,6 +345,10 @@ const TextareaAutocomplete = (props) => {
         {filteredSuggestions.map((item, index) => {
           return (
             <li
+              onMouseEnter={(e) => {
+                setHighlightedOption(index);
+              }}
+              onClick={(e) => {}}
               className={`list${index}`}
               key={index}
               style={{
