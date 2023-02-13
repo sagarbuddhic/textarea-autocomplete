@@ -21,6 +21,7 @@ function App(props) {
     <div>
       <TextareaAutocomplete
         suggestions={props.suggestions || suggestionsDummy}
+        showSuggestionStartsWith
         handleInput={handleInput}
         placeholder="test"
         editableStyle={

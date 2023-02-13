@@ -42,8 +42,8 @@ const TextareaAutocomplete = (props) => {
           if (
             !editDiv ||
             !editDiv.current ||
-            e.key === "ArrowLeft" ||
-            e.key === "ArrowRight"
+            (e.key === "ArrowLeft" && e.shiftKey) ||
+            (e.key.toLowerCase() === "a" && e.ctrlKey)
           ) {
             return;
           }
@@ -68,9 +68,18 @@ const TextareaAutocomplete = (props) => {
 
           let innerText = editDiv.current.innerText;
           let ignoreFilter =
-            filteredSuggestions.length > 0 &&
-            (innerText.endsWith("\n") ||
-              ["Enter", "ArrowUp", "ArrowDown"].includes(e.key));
+            (filteredSuggestions.length > 0 && innerText.endsWith("\n")) ||
+            [
+              "Enter",
+              "ArrowUp",
+              "ArrowDown",
+              "Shift",
+              "ArrowLeft",
+              "ArrowRight",
+              "AltLeft",
+              "AltRight",
+              "Control",
+            ].includes(e.key);
 
           if (!ignoreFilter) {
             let contentArr = [...content];
@@ -146,19 +155,24 @@ const TextareaAutocomplete = (props) => {
             }
 
             if (e.key === "Enter") {
-              let prevArr = [...prevContent];
+              let prevContArr = [...prevContent];
+              let contArr = [...content];
               let enterIndex = 0;
-              [...content].every((val, index) => {
-                enterIndex = index;
-                return val === prevArr[index];
-              });
-
-              let contentLeft = content.substring(0, enterIndex + 1);
-              let contentRight = content.substring(enterIndex + 1);
               if (prevContent.length > content.length) {
-                contentLeft = content.substring(0, enterIndex);
-                contentRight = content.substring(enterIndex);
+                prevContArr.every((val, index) => {
+                  enterIndex = index;
+                  return val === contArr[index];
+                });
+              } else {
+                contArr.every((val, index) => {
+                  enterIndex = index;
+                  return val === prevContArr[index];
+                });
+                enterIndex += 1;
               }
+
+              let contentLeft = content.substring(0, enterIndex);
+              let contentRight = content.substring(enterIndex);
 
               let endIndexOfLeft = Math.max(
                 contentLeft.lastIndexOf(" "),
@@ -169,10 +183,9 @@ const TextareaAutocomplete = (props) => {
               }`;
               editDiv.current.innerText = contentLeft + contentRight;
 
-              let cursorMoveWords = contentLeft
-                .split(/[\s]+/)
-                .filter((val) => val !== "");
-              let sel = window.getSelection();
+              // let cursorMoveWords = contentLeft
+              //   .split(/[\s]+/)
+              //   .filter((val) => val !== "");
 
               // cursorMoveWords.forEach(() => {
               //   sel.modify("move", "forward", "word");
@@ -180,6 +193,7 @@ const TextareaAutocomplete = (props) => {
               // sel.modify("move", "forward", "word");
 
               // editDiv.current.focus();
+              let sel = window.getSelection();
               let sentences = editDiv.current.innerText.split("\n");
               let contentLeftLength = contentLeft.replaceAll("\n", "").length;
               let childIndex = 0;
@@ -400,6 +414,7 @@ TextareaAutocomplete.defaultProps = {
     "INTEGER",
     "DATETIME",
     "STRING",
+    "AND",
   ],
   placeholder: "",
   handleInput: (input) => {},
