@@ -24,6 +24,7 @@ function App(props) {
         showSuggestionStartsWith
         handleInput={handleInput}
         placeholder="test"
+        value="Test Value"
         editableStyle={
           {
             // border: "1px solid red",

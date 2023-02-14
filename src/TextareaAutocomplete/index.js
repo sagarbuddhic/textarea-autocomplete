@@ -12,6 +12,7 @@ const TextareaAutocomplete = (props) => {
     showSuggestionWithNoInput,
     showSuggestionStartsWith,
     placeholder,
+    value,
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -31,7 +32,11 @@ const TextareaAutocomplete = (props) => {
     return false;
   };
 
-  useEffect(() => {});
+  useEffect(() => {
+    if (value != null && editDiv?.current) {
+      editDiv.current.innerText = value;
+    }
+  }, [value]);
   return (
     <div className="editableWrapper">
       <div
@@ -399,6 +404,7 @@ TextareaAutocomplete.propTypes = {
   showSuggestionWithNoInput: PropTypes.bool,
   showSuggestionStartsWith: PropTypes.bool,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
 };
 
 TextareaAutocomplete.defaultProps = {
@@ -423,6 +429,7 @@ TextareaAutocomplete.defaultProps = {
   },
   showSuggestionWithNoInput: false,
   showSuggestionStartsWith: false,
+  value: null,
 };
 
 export default TextareaAutocomplete;
