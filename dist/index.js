@@ -11,7 +11,8 @@ const TextareaAutocomplete = props => {
     showSuggestionWithNoInput,
     showSuggestionStartsWith,
     placeholder,
-    value
+    value,
+    handleFocus
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -199,7 +200,8 @@ const TextareaAutocomplete = props => {
       ...editableStyle
     },
     contentEditable: "true",
-    onFocus: () => {
+    onFocus: e => {
+      handleFocus(e);
       if (showSuggestionWithNoInput && !content) {
         setFilteredSuggestions(suggestions);
         setHighlightedOption(0);
@@ -312,17 +314,19 @@ TextareaAutocomplete.propTypes = {
   showSuggestionWithNoInput: PropTypes.bool,
   showSuggestionStartsWith: PropTypes.bool,
   placeholder: PropTypes.string,
-  value: PropTypes.string
+  value: PropTypes.string,
+  handleFocus: PropTypes.func
 };
 TextareaAutocomplete.defaultProps = {
   suggestions: ["IGNORE_DIFF", "FILTER_DIFF", "WHERE", "COLUMN_TYPE", "COLUMN_NAME", "TABLE_NAME", "LIKE", "=", "INTEGER", "DATETIME", "STRING", "AND"],
   placeholder: "",
-  handleInput: input => {},
+  handleInput: () => {},
   editableStyle: {
     border: "1px solid darkgray"
   },
   showSuggestionWithNoInput: false,
   showSuggestionStartsWith: false,
-  value: null
+  value: null,
+  handleFocus: () => {}
 };
 export default TextareaAutocomplete;

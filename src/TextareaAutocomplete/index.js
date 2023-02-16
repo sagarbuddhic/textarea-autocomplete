@@ -13,6 +13,7 @@ const TextareaAutocomplete = (props) => {
     showSuggestionStartsWith,
     placeholder,
     value,
+    handleFocus,
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -266,7 +267,8 @@ const TextareaAutocomplete = (props) => {
           ...editableStyle,
         }}
         contentEditable="true"
-        onFocus={() => {
+        onFocus={(e) => {
+          handleFocus(e);
           if (showSuggestionWithNoInput && !content) {
             setFilteredSuggestions(suggestions);
             setHighlightedOption(0);
@@ -405,6 +407,7 @@ TextareaAutocomplete.propTypes = {
   showSuggestionStartsWith: PropTypes.bool,
   placeholder: PropTypes.string,
   value: PropTypes.string,
+  handleFocus: PropTypes.func,
 };
 
 TextareaAutocomplete.defaultProps = {
@@ -423,13 +426,14 @@ TextareaAutocomplete.defaultProps = {
     "AND",
   ],
   placeholder: "",
-  handleInput: (input) => {},
+  handleInput: () => {},
   editableStyle: {
     border: "1px solid darkgray",
   },
   showSuggestionWithNoInput: false,
   showSuggestionStartsWith: false,
   value: null,
+  handleFocus: () => {},
 };
 
 export default TextareaAutocomplete;
