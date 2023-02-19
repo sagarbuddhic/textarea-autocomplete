@@ -2,7 +2,6 @@ import "./App.css";
 import TextareaAutocomplete from "./TextareaAutocomplete";
 
 const suggestionsDummy = [
-  "IGNORE_DIFF",
   "FILTER_DIFF",
   "WHERE",
   "COLUMN_TYPE",
@@ -10,10 +9,13 @@ const suggestionsDummy = [
   "TABLE_NAME",
   "LIKE",
   "=",
+  "!=",
+  "NOT",
   "INTEGER",
   "DATETIME",
   "STRING",
   "AND",
+  "OR",
 ];
 function App(props) {
   const handleInput = (input) => {};
@@ -23,8 +25,8 @@ function App(props) {
         suggestions={props.suggestions || suggestionsDummy}
         showSuggestionStartsWith
         handleInput={handleInput}
-        placeholder="test"
-        value="Test Value"
+        placeholder="Enter Value"
+        value=""
         editableStyle={
           {
             // border: "1px solid red",

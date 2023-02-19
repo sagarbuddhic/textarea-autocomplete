@@ -296,7 +296,49 @@ const TextareaAutocomplete = props => {
       onMouseEnter: e => {
         setHighlightedOption(index);
       },
-      onClick: e => {},
+      onMouseDown: e => {
+        let prevContArr = [...prevContent];
+        let contArr = [...content];
+        let enterIndex = 0;
+        if (prevContent.length > content.length) {
+          prevContArr.every((val, index) => {
+            enterIndex = index;
+            return val === contArr[index];
+          });
+        } else {
+          contArr.every((val, index) => {
+            enterIndex = index;
+            return val === prevContArr[index];
+          });
+          enterIndex += 1;
+        }
+        let contentLeft = content.substring(0, enterIndex);
+        let contentRight = content.substring(enterIndex);
+        let endIndexOfLeft = Math.max(contentLeft.lastIndexOf(" "), contentLeft.lastIndexOf("\n"));
+        contentLeft = `${contentLeft.substring(0, endIndexOfLeft + 1)}${filteredSuggestions[highlightedOption]}`;
+        editDiv.current.innerText = contentLeft + contentRight;
+        let sel = window.getSelection();
+        let sentences = editDiv.current.innerText.split("\n");
+        let contentLeftLength = contentLeft.replaceAll("\n", "").length;
+        let childIndex = 0;
+        sentences.every(sentence => {
+          if (contentLeftLength > sentence.length) {
+            contentLeftLength = contentLeftLength - sentence.length;
+            childIndex = childIndex + 2;
+            return true;
+          }
+          return false;
+        });
+        childIndex = childIndex > editDiv.current.childNodes.length ? childIndex - 1 : childIndex;
+        const inputRange = document.createRange();
+        inputRange.setStart(editDiv.current.childNodes[childIndex], contentLeftLength);
+        inputRange.collapse(true);
+        sel.removeAllRanges();
+        sel.addRange(inputRange);
+        setFilteredSuggestions([]);
+        setPrevContent(content);
+        setContent(editDiv.current.innerText);
+      },
       className: `list${index}`,
       key: index,
       style: {
@@ -318,7 +360,7 @@ TextareaAutocomplete.propTypes = {
   handleFocus: PropTypes.func
 };
 TextareaAutocomplete.defaultProps = {
-  suggestions: ["IGNORE_DIFF", "FILTER_DIFF", "WHERE", "COLUMN_TYPE", "COLUMN_NAME", "TABLE_NAME", "LIKE", "=", "INTEGER", "DATETIME", "STRING", "AND"],
+  suggestions: ["FILTER_DIFF", "WHERE", "COLUMN_TYPE", "COLUMN_NAME", "TABLE_NAME", "LIKE", "=", "!=", "NOT", "INTEGER", "DATETIME", "STRING", "AND", "OR"],
   placeholder: "",
   handleInput: () => {},
   editableStyle: {
