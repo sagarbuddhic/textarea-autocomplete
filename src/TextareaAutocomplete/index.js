@@ -427,6 +427,7 @@ const TextareaAutocomplete = (props) => {
                 setFilteredSuggestions([]);
                 setPrevContent(content);
                 setContent(editDiv.current.innerText);
+                handleInput(editDiv.current.innerText);
               }}
               className={`list${index}`}
               key={index}
