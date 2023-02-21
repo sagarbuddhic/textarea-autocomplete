@@ -1,13 +1,15 @@
 {
   "name": "textarea-autocomplete",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
+  "main": "dist/index",
+  "module": "dist/index.d.ts",
+  "types": "dist/index.d.ts",
+  "type": "module",
   "babel": {
     "presets": [
       "@babel/preset-react"
     ]
   },
-  "version": "0.2.1",
+  "version": "0.2.8",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -46,6 +48,7 @@
     "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.12",
     "@babel/preset-env": "^7.20.2",
-    "@babel/preset-react": "^7.18.6"
+    "@babel/preset-react": "^7.18.6",
+    "typescript": "^4.9.5"
   }
 }
