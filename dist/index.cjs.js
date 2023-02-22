@@ -1,8 +1,15 @@
-import React, { useState } from "react";
-import PropTypes from "prop-types";
-import { useEffect } from "react";
-import { useRef } from "react";
-import "./index.css";
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _react = _interopRequireWildcard(require("react"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
+require("./index.css");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 const TextareaAutocomplete = props => {
   const {
     suggestions,
@@ -14,14 +21,14 @@ const TextareaAutocomplete = props => {
     value,
     handleFocus
   } = props;
-  const [listTop, setListTop] = useState(0);
-  const [listLeft, setListLeft] = useState(0);
-  const [filteredSuggestions, setFilteredSuggestions] = useState([]);
-  const [highlightedOption, setHighlightedOption] = useState(0);
-  const [content, setContent] = useState("");
-  const [prevContent, setPrevContent] = useState("");
-  const editDiv = useRef(null);
-  const [editableFocus, setEditableFocus] = useState(false);
+  const [listTop, setListTop] = (0, _react.useState)(0);
+  const [listLeft, setListLeft] = (0, _react.useState)(0);
+  const [filteredSuggestions, setFilteredSuggestions] = (0, _react.useState)([]);
+  const [highlightedOption, setHighlightedOption] = (0, _react.useState)(0);
+  const [content, setContent] = (0, _react.useState)("");
+  const [prevContent, setPrevContent] = (0, _react.useState)("");
+  const editDiv = (0, _react.useRef)(null);
+  const [editableFocus, setEditableFocus] = (0, _react.useState)(false);
   const isSelected = (highlighted, item, index) => {
     if (highlighted) {
       if (highlighted === item) return true;
@@ -30,14 +37,14 @@ const TextareaAutocomplete = props => {
     }
     return false;
   };
-  useEffect(() => {
+  (0, _react.useEffect)(() => {
     if (value != null && editDiv?.current) {
       editDiv.current.innerText = value;
     }
   }, [value]);
-  return /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/_react.default.createElement("div", {
     className: "editableWrapper"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/_react.default.createElement("div", {
     className: "editableAutocomplete",
     "data-content": placeholder,
     ref: editDiv,
@@ -264,7 +271,7 @@ const TextareaAutocomplete = props => {
       //   setFilteredSuggestions(filtered);
       // }
     }
-  }), /*#__PURE__*/React.createElement("ul", {
+  }), /*#__PURE__*/_react.default.createElement("ul", {
     // onMouseLeave={(e) => {
     //   setHighlightedOption(0);
     // }}
@@ -292,7 +299,7 @@ const TextareaAutocomplete = props => {
       color: "black"
     }
   }, filteredSuggestions.map((item, index) => {
-    return /*#__PURE__*/React.createElement("li", {
+    return /*#__PURE__*/_react.default.createElement("li", {
       onMouseEnter: e => {
         setHighlightedOption(index);
       },
@@ -351,14 +358,14 @@ const TextareaAutocomplete = props => {
   })));
 };
 TextareaAutocomplete.propTypes = {
-  editableStyle: PropTypes.object,
-  suggestions: PropTypes.array,
-  handleInput: PropTypes.func,
-  showSuggestionWithNoInput: PropTypes.bool,
-  showSuggestionStartsWith: PropTypes.bool,
-  placeholder: PropTypes.string,
-  value: PropTypes.string,
-  handleFocus: PropTypes.func
+  editableStyle: _propTypes.default.object,
+  suggestions: _propTypes.default.array,
+  handleInput: _propTypes.default.func,
+  showSuggestionWithNoInput: _propTypes.default.bool,
+  showSuggestionStartsWith: _propTypes.default.bool,
+  placeholder: _propTypes.default.string,
+  value: _propTypes.default.string,
+  handleFocus: _propTypes.default.func
 };
 TextareaAutocomplete.defaultProps = {
   suggestions: ["FILTER_DIFF", "WHERE", "COLUMN_TYPE", "COLUMN_NAME", "TABLE_NAME", "LIKE", "=", "!=", "NOT", "INTEGER", "DATETIME", "STRING", "AND", "OR"],
@@ -372,6 +379,5 @@ TextareaAutocomplete.defaultProps = {
   value: null,
   handleFocus: () => {}
 };
-export default TextareaAutocomplete;
-
-//tsc -d --declarationDir src/TextareaAutocomplete --declarationMap --emitDeclarationOnly
+var _default = TextareaAutocomplete; //tsc -d --declarationDir src/TextareaAutocomplete --declarationMap --emitDeclarationOnly
+exports.default = _default;

@@ -498,3 +498,11 @@ TextareaAutocomplete.defaultProps = {
 };
 
 export default TextareaAutocomplete;
+
+//tsc -d --declarationDir src/TextareaAutocomplete --declarationMap --emitDeclarationOnly
+
+// "build": "set NODE_ENV=production && rm -rf test && mkdir test && ./node_modules/.bin/babel src/TextareaAutocomplete --out-dir test --copy-files",
+
+// "plugins": [
+//   "@babel/plugin-transform-modules-commonjs"
+// ]
