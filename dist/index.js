@@ -12,7 +12,8 @@ const TextareaAutocomplete = props => {
     showSuggestionStartsWith,
     placeholder,
     value,
-    handleFocus
+    handleFocus,
+    tabindex
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -38,6 +39,7 @@ const TextareaAutocomplete = props => {
   return /*#__PURE__*/React.createElement("div", {
     className: "editableWrapper"
   }, /*#__PURE__*/React.createElement("div", {
+    tabindex: tabindex,
     className: "editableAutocomplete",
     "data-content": placeholder,
     ref: editDiv,
@@ -358,7 +360,8 @@ TextareaAutocomplete.propTypes = {
   showSuggestionStartsWith: PropTypes.bool,
   placeholder: PropTypes.string,
   value: PropTypes.string,
-  handleFocus: PropTypes.func
+  handleFocus: PropTypes.func,
+  tabindex: PropTypes.string
 };
 TextareaAutocomplete.defaultProps = {
   suggestions: ["FILTER_DIFF", "WHERE", "COLUMN_TYPE", "COLUMN_NAME", "TABLE_NAME", "LIKE", "=", "!=", "NOT", "INTEGER", "DATETIME", "STRING", "AND", "OR"],
@@ -370,8 +373,23 @@ TextareaAutocomplete.defaultProps = {
   showSuggestionWithNoInput: false,
   showSuggestionStartsWith: false,
   value: null,
-  handleFocus: () => {}
+  handleFocus: () => {},
+  tabindex: ""
 };
 export default TextareaAutocomplete;
 
-//tsc -d --declarationDir src/TextareaAutocomplete --declarationMap --emitDeclarationOnly
+// step 1 npm run build
+
+// step 2 add
+// "plugins": [
+//   "@babel/plugin-transform-modules-commonjs"
+// ]
+
+// step 3 build
+// set NODE_ENV=production && rm -rf test && mkdir test && ./node_modules/.bin/babel src/TextareaAutocomplete --out-dir test --copy-files
+
+// step 4
+// copy test contents to dist
+
+// step 5
+// tsc -d --declarationDir dist --declarationMap --emitDeclarationOnly

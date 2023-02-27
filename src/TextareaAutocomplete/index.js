@@ -14,6 +14,7 @@ const TextareaAutocomplete = (props) => {
     placeholder,
     value,
     handleFocus,
+    tabindex,
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -41,6 +42,7 @@ const TextareaAutocomplete = (props) => {
   return (
     <div className="editableWrapper">
       <div
+        tabindex={tabindex}
         className="editableAutocomplete"
         data-content={placeholder}
         ref={editDiv}
@@ -467,6 +469,7 @@ TextareaAutocomplete.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string,
   handleFocus: PropTypes.func,
+  tabindex: PropTypes.string,
 };
 
 TextareaAutocomplete.defaultProps = {
@@ -495,14 +498,23 @@ TextareaAutocomplete.defaultProps = {
   showSuggestionStartsWith: false,
   value: null,
   handleFocus: () => {},
+  tabindex: "",
 };
 
 export default TextareaAutocomplete;
 
-//tsc -d --declarationDir src/TextareaAutocomplete --declarationMap --emitDeclarationOnly
+// step 1 npm run build
 
-// "build": "set NODE_ENV=production && rm -rf test && mkdir test && ./node_modules/.bin/babel src/TextareaAutocomplete --out-dir test --copy-files",
-
+// step 2 add
 // "plugins": [
 //   "@babel/plugin-transform-modules-commonjs"
 // ]
+
+// step 3 build
+// set NODE_ENV=production && rm -rf test && mkdir test && ./node_modules/.bin/babel src/TextareaAutocomplete --out-dir test --copy-files
+
+// step 4
+// copy test contents to dist
+
+// step 5
+// tsc -d --declarationDir dist --declarationMap --emitDeclarationOnly
