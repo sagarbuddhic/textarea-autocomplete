@@ -17,6 +17,7 @@ This Component provides a text area where we can pass an array of options which 
 |showSuggestionStartsWith  | bool        |  show suggestion which starts with input entered                                |
 |value                     | string      |  update innerText by passing the value or null to not affect the innerText      |
 |handleFocus               | func        |  called when textarea is focussed                                               |
+|tabIndex                  | string      |                                                |
 
 ## Usage
 

@@ -10,7 +10,7 @@ declare namespace TextareaAutocomplete {
         const placeholder: any;
         const value: any;
         const handleFocus: any;
-        const tabindex: any;
+        const tabIndex: any;
     }
     namespace defaultProps {
         const suggestions_1: string[];
@@ -31,8 +31,8 @@ declare namespace TextareaAutocomplete {
         export { value_1 as value };
         export function handleFocus_1(): void;
         export { handleFocus_1 as handleFocus };
-        const tabindex_1: string;
-        export { tabindex_1 as tabindex };
+        const tabIndex_1: string;
+        export { tabIndex_1 as tabIndex };
     }
 }
 //# sourceMappingURL=index.d.ts.map

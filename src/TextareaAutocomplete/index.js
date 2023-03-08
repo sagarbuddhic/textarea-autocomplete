@@ -14,7 +14,7 @@ const TextareaAutocomplete = (props) => {
     placeholder,
     value,
     handleFocus,
-    tabindex,
+    tabIndex,
   } = props;
   const [listTop, setListTop] = useState(0);
   const [listLeft, setListLeft] = useState(0);
@@ -42,7 +42,7 @@ const TextareaAutocomplete = (props) => {
   return (
     <div className="editableWrapper">
       <div
-        tabindex={tabindex}
+        tabIndex={tabIndex}
         className="editableAutocomplete"
         data-content={placeholder}
         ref={editDiv}
@@ -469,25 +469,19 @@ TextareaAutocomplete.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.string,
   handleFocus: PropTypes.func,
-  tabindex: PropTypes.string,
+  tabIndex: PropTypes.string,
 };
 
 TextareaAutocomplete.defaultProps = {
   suggestions: [
-    "FILTER_DIFF",
-    "WHERE",
-    "COLUMN_TYPE",
-    "COLUMN_NAME",
-    "TABLE_NAME",
-    "LIKE",
-    "=",
-    "!=",
-    "NOT",
-    "INTEGER",
-    "DATETIME",
-    "STRING",
-    "AND",
-    "OR",
+    "TEST",
+    "ANT",
+    "COMMON",
+    "DANCE",
+    "FAN",
+    "PAPER",
+    "RIVER",
+    "EAR",
   ],
   placeholder: "",
   handleInput: () => {},
@@ -498,10 +492,12 @@ TextareaAutocomplete.defaultProps = {
   showSuggestionStartsWith: false,
   value: null,
   handleFocus: () => {},
-  tabindex: "",
+  tabIndex: "",
 };
 
 export default TextareaAutocomplete;
+
+// add "type": "module" - to package.json
 
 // step 1 npm run build
 
@@ -515,6 +511,11 @@ export default TextareaAutocomplete;
 
 // step 4
 // copy test contents to dist
+// rename to cjs
 
 // step 5
+// uncomment in tsconfig.json // "baseUrl": "src/TextareaAutocomplete",
 // tsc -d --declarationDir dist --declarationMap --emitDeclarationOnly
+
+// step 6
+// npm publish

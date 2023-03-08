@@ -2,20 +2,14 @@ import "./App.css";
 import TextareaAutocomplete from "./TextareaAutocomplete";
 
 const suggestionsDummy = [
-  "FILTER_DIFF",
-  "WHERE",
-  "COLUMN_TYPE",
-  "COLUMN_NAME",
-  "TABLE_NAME",
-  "LIKE",
-  "=",
-  "!=",
-  "NOT",
-  "INTEGER",
-  "DATETIME",
-  "STRING",
-  "AND",
-  "OR",
+  "TEST",
+  "ANT",
+  "COMMON",
+  "DANCE",
+  "FAN",
+  "PAPER",
+  "RIVER",
+  "EAR",
 ];
 function App(props) {
   const handleInput = (input) => {};
@@ -26,12 +20,12 @@ function App(props) {
         showSuggestionStartsWith
         handleInput={handleInput}
         placeholder="Enter Value"
-        value=""
         editableStyle={
           {
             // border: "1px solid red",
           }
         }
+        tabIndex="2"
       />
     </div>
   );
